@@ -1,115 +1,68 @@
 ---
-title: "[Java] Java 01"
+title: "[Java] File, IO"
 categories:
     - Java
 ---
-/*
- * File 클래스
- */
-public class Main {
+★File 클래스 : 파일을 참조하는 객체이다. 사용법은 메소드 이름보면 됌
 
-	public static void main(String[] args) throws IOException {
-		System.out.println(File.pathSeparator);
-		//	';' : 경로 구분자
-		System.out.println(File.separator);
-		//	'\' : 디렉토리 구분
-		
-		//	파일의 경로를 입력함. 기본경로는 프로젝트 폴더
-		//	파일을 참조하는 것일 뿐 실제 파일이 아님
-		File f = new File("test.txt");
-		//	파일의 정보를 가지고 있음
-		System.out.println(f.exists());
-		if(!f.exists()) {
-			System.out.println(f.createNewFile());
-		}
-		System.out.println(f.exists());
-		System.out.println(f.canExecute());
-		System.out.println(f.canRead());
-		System.out.println(f.canWrite());
-		System.out.println(f.getAbsolutePath());
-		System.out.println(f.getCanonicalFile());
-		System.out.println(f.getFreeSpace());
-		System.out.println(f.getName());
-		System.out.println(f.getParentFile());
-		System.out.println(f.length());
-		System.out.println(f.isHidden());
+★File IO<br>
+...Stream : 1바이트단위로 움직임(기본 단위), 바이너리 입출력이라고도 함<br>
+...Reader/Writer : 2바이트 단위로 움직임(문자 단위)
+{% highlight java %}
+FileOutputStream fos1 = new FileOutputStream(FileDescriptor.out);
+//	FileDescriptor : 파일 설명자
+//	FileOutputStream의 생성자에 목적지를 지정한다.
+//	FileDescriptor.out : 출력할 장소를 콘솔창으로 지정하는 것
+
+fos1.write(65);
+byte[] b = new byte[] {'h','e','l','l','o'};
+fos1.write(b);
+fos1.write(b, 0, 4);
+{% endhighlight %}
+
+{% highlight java %}
+File file = new File("test.txt");
+FileOutputStream fos2 = new FileOutputStream(file);
+//	출력할 장소를 file로 지정하였다.
+
+fos2.write(65);
+fos2.write(b);
+fos2.write(b, 0, 4);
+
+//	데이터가 크면 클수록 비효율적이다.
+{% endhighlight %}
+
+★Buffer : 임시 저장공간에 담았다가 한꺼번에 출력할 때 사용. 대용량 데이터를 입출력하기 효율적이게 된다.
+{% highlight java %}
+FileOutputStream fos1 = new FileOutputStream(FileDescriptor.out);
+BufferedOutputStream bos1 = new BufferedOutputStream(fos1, 10);
+//	생성자에있는 숫자는 버퍼의 크기, 버퍼의 크기를 초과했을때 넘치는 부분은 출력이 된다.
+for(int i = 0; i < 11; i++) {
+	bos1.write(65);
+	//	write해도 버퍼에 담을 뿐이라 출력이 안됌
+	if(i % 3 == 0) {
+		bos1.write('\n');
+		bos1.flush();	//	버퍼를 비운다.
 	}
 }
+//	flush를 하지 않으면 버퍼가 넘치거나 스트림이 close될때 버퍼가 비워진다.
+bos1.close();	//	스트림을 닫는 메소드
+{% endhighlight %}
 
-
-/*
- * 파일 입출력
- * ...Stream : 1바이트단위로 움직임(기본 단위), 바이너리 입출력이라고도 함
- * ...Reader/Writer : 2바이트 단위로 움직임(문자 단위)
- * 
- */
-public class Main {
-
-	public static void main(String[] args) throws IOException {
-		//	FileDescriptor : 파일 설명자
-		//	FileOutputStream의 생성자에 목적지를 지정한다.
-		//	FileDescriptor.out : 출력할 장소를 콘솔창으로 지정하는 것
-		FileOutputStream fos1 = new FileOutputStream(FileDescriptor.out);
-		
-		fos1.write(65);
-		byte[] b = new byte[] {'h','e','l','l','o'};
-		fos1.write(b);
-		fos1.write(b, 0, 4);
-		
-		File file = new File("test.txt");
-		//	FileDescriptor.out : 출력할 장소를 file로 지정하는 것
-		FileOutputStream fos2 = new FileOutputStream(file);
-		
-		fos2.write(65);
-		fos2.write(b);
-		fos2.write(b, 0, 4);
-		
-		//	데이터가 크면 클수록 비효율적이다.
+{% highlight java %}
+File file = new File("test.txt");
+FileOutputStream fos2 = new FileOutputStream(file, false);
+//	true : 파일에 내용을 추가함, false : 내용을 교체함
+BufferedOutputStream bos2 = new BufferedOutputStream(fos2, 10);
+for(int i = 0; i < 11; i++) {
+	bos2.write(65);
+	//	write해도 버퍼에 담을 뿐이라 출력이 안됌
+	if(i == 100) {
+		bos2.flush();	//	버퍼를 비운다.
 	}
 }
-
-
-/*
- * 파일 입출력
- * buffer : 임시 저장공간에 담았다가 한꺼번에 출력할 때 사용. 
- * 	ㄴ대용량 데이터를 입출력하기 효율적이게 된다.
- */
-public class Main {
-
-	public static void main(String[] args) throws IOException {
-		FileOutputStream fos1 = new FileOutputStream(FileDescriptor.out);
-		BufferedOutputStream bos1 = new BufferedOutputStream(fos1, 10);
-		//	생성자에있는 숫자는 버퍼의 크기, 버퍼의 크기를 초과했을때 넘치는 부분은 출력이 된다.
-		
-		for(int i = 0; i < 11; i++) {
-			bos1.write(65);
-			//	write해도 버퍼에 담을 뿐이라 출력이 안됌
-			if(i % 3 == 0) {
-				bos1.write('\n');
-				bos1.flush();	//	버퍼를 비운다.
-			}
-		}
-		//	flush를 하지 않으면 버퍼가 넘치거나 스트림이 close될때 버퍼가 비워진다.
-		bos1.close();	//	스트림을 닫는 메소드
-		
-		
-		
-		File file = new File("test.txt");
-		//	true : 파일에 내용을 추가함, false : 내용을 교체함
-		FileOutputStream fos2 = new FileOutputStream(file, false);
-		BufferedOutputStream bos2 = new BufferedOutputStream(fos2, 10);
-		
-		for(int i = 0; i < 11; i++) {
-			bos2.write(65);
-			//	write해도 버퍼에 담을 뿐이라 출력이 안됌
-			if(i == 100) {
-				bos2.flush();	//	버퍼를 비운다.
-			}
-		}
-		bos2.close();
-	}
-}
-
+bos2.close();
+{% endhighlight %}
 
 
 
