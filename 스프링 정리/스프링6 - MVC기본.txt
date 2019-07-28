@@ -1,0 +1,113 @@
+★웹 프로그래밍 설계모델
+
+	웹 프로그래밍에서도 역시 스프링이 많이 쓰인다.
+
+	스프링은 기본적으로 MVC(Model2)를 바탕으로 웹 프로그래밍을 설계하게 되어있다.
+
+
+★스프링 MVC프레임워크 설계 구조
+	브라우저에서 DispatcherServlet으로 요청한다
+	1. DispatcherServlet는 HandlerMapping에게 요청을 던지는데
+
+	HandlerMapping은 요청에 맞는 Controller를 선택해 준다.(Controller는 여러개가 있다고 가정함)(Controller검색)
+	2. 컨트롤러를 받은 DispatcherServlet은
+	HandlerAdpater에게 이 객체를 보내게 되는데
+	HandlerAdpater가 Controller의 많은 메소드 중 가장 요청에 적합한 메소드를 골라서 실행한다.
+	HandlerAdpater가 Model의 역할을 하는 것이다.
+
+	(Model검색)
+	3. 그 후 DispatcherServlet는 ViewResolver를 찾는다.
+
+	4. JSP파일을 찾아 ViewResolver는 DispatcherServlet에게 리턴하고(View검색)
+
+	5. DispatcherServlet는 View를 생성해 브라우저에게 반환한다.
+
+
+★WEB-INF/web.xml에 서블릿(DispatcherServlet)을 매핑해주는 것으로 시작한다.
+
+	<servlet>
+		<servlet-name>
+		<servlet-class>
+	<servlet-mapping>
+		<servlet-name>
+		<url-pattern>
+
+	늘 하던 방식.
+
+	스프링 프레임워크에 다 포함되어 있고, Controller와 View만 직접 제어하면 된다.
+
+	init-param으로 스프링 설정파일(xml)을 포함 시켜주면 이것을 기반으로 스프링 컨테이너를 생성한다.
+
+	포함시키지 않으면 appServlet-context.xml파일을 자동으로 찾아서 포함한다.
+
+
+★스프링 설정파일에다가 <annotation-driven/>을 추가하면 어노테이션을 사용할 수 있게 된다
+	필수라고 보면 됌
+
+★Controller 만들기
+	실제로 Controller로 사용할 객체는 일반적인 클래스로 만들고,
+	@Controller라는 어노테이션을 붙이면, 이 파일은 Controller로 작동을
+	하게 된다.
+
+
+★적합한 Controller를 얻은 DispatcherServlet는 이제 적합한 메소드를 찾아야 하는데
+	@RequestMapping(...)를 이용해 요청한 path를 이 메소드에 매핑한다.
+	@RequestMapping("/success")
+
+	public String success(Model model) {...}
+
+★전달받은 Model객체에 데이터를 담아 View에게 전달하게 된다.
+
+★Model객체를 ViewResolver가 받는다.
+
+	ViewResolver는 View객체를 찾은 후 Model객체를 이용해 데이터를 가공하고
+	클라이언트에 반환함으로써 사이클이 종료되게 된다.
+
+
+★개발자가 구현해야할 부분은 초기설정, Controller부분(백엔드), View부분(프론트엔드)이 전부다.
+ 나머지는 스프링 프레임워크가 모두 해줌!
+
+
+★스프링을 사용하기 전에 톰캣서버 설정
+
+	Server Locations > Use Tomcat installation 선택
+	Server Options > publish module contexts to separate XML files 선택
+
+★이클립스에 STS(Spring Tool Suit)설치
+	Help > Marketplace로 들어서 > STS검색 후 설치
+	이후 STS를 이용해 웹 프로젝트를 생성할 수 있다.
+
+	STS는 MVC패턴 스프링 웹 애플리케이션의 기틀을 손쉽게 잡을 수 있게 해준다.
+
+★STS를 사용해 스프링 웹 프로젝트 만드는 순서
+	프로젝트를 만들 때 유형을 Spring Legacy Project 선택
+	Templete을 spring MVC project선택
+	이렇게 만들어지는 Project는 STS가 만들어 준 것이다.
+	web.xml, servlet-context.xml, pom.xml의 내용들이
+	서로 유기적으로 연결되어 실행된다.
+
+★STS를 사용하지 않고 직접 스프링 웹 프로젝트 만들기
+	1. 프로젝트 경로들을 만든다.
+	src
+	ㄴ	main
+		ㄴ	java
+		ㄴ	webapp
+			ㄴ	resources
+			ㄴ	WEB-INF
+				ㄴ	spring
+				ㄴ	views
+	2. 프로젝트 루트에 pom.xml을 만들고, WEB-INF에 web.xml도 만들어야 한다.
+	3. 마지막으로 servlet-context.xml와 root-context.xml을 만들어 준다(복붙추천)
+		이 파일의 경로는 web.xml의 DispatcherServlet클래스를 등록하는 부분의
+		init-param값과 같아야 한다
+
+★@Controller, @Service, @Repository, @Component
+	이 4가지 어노테이션은 모두 빈에 자동등록하기 위해 사용된다.
+	큰 기능의 차이보다는 의미를 명시하기 위해 사용하며
+	aop의 pointcut에서 어노테이션 단위로 지정하여 사용할때 적합하다...고 하는데 무슨말인지?
+	@Controller : 프레젠테이션 레이어에서 Controller를 명시하기 위해 사용
+	@Service : 비즈니스 레이어에서 Service를 명시하기 위해 사용
+	@Repository : 퍼시스턴스 레이어에서 DAO를 명시하기 위해 사용
+	@Component : 그 외에 일반적으로 자동으로 스캔하기 위해 기본적으로 사용
+		위에 3개도 모두 이걸 상속하고 있다.
+		멤버변수와 setter/getter만을 가진 일반적인 DTO같은 컴포넌트		

@@ -1,0 +1,61 @@
+★어노테이션을 이용한 스프링 설정
+	스프링 설정 xml파일의 기능을 자바파일로도 변환할 수 있다.
+	이때 어노테이션을 사용한다.
+
+★설정으로 사용할 클래스를 만들 때 @Configuration를 사용한다.
+	@Configuration
+	public class MemberConfig { ... }
+
+★객체 구현법
+	<bean id="studentDao" class="spring04.member.dao.StudentDao" ></bean>
+	를 @Bean을 사용해서
+	@Bean
+	public StudentDao(타입) studentDao(id로 사용할 이름)() {
+		return new StudentDao()
+	}
+	로 바꾸면 똑같은 기능을 할 수 있다.
+
+	<bean id="registerService" class="spring04.member.service.StudentRegisterService">
+		<constructor-arg ref="studentDao" ></constructor-arg>
+	</bean>
+	는
+	@Bean
+	public StudentRegisterService registerService() {
+		return new StudentRegisterService(studentDao());
+	}
+	로 바꿀 수 있다.
+
+	암튼 함수 내부에서 객체를 생성하고 return해주면 된다.
+	property는 setter를 사용하면 돼고.
+	<list>타입은 ArrayList타입으로, <map>타입은 HashMap으로 꼭 안써도 되고
+	List, Map인터페이스를 구현한 클래스를 쓰면 됌
+
+★만들어놓은 @Configuration클래스를 사용할 때는
+	GenericXmlApplicationContext클래스 대신
+	AnnotationConfigApplicationContext ctx = 
+			new AnnotationConfigApplicationContext(MemberConfig.class...);
+	를 사용해 로드한 뒤 똑같이 사용한다.
+
+	이것도 xml파일처럼 여러개를 만들어서 import시키는 방식으로
+	코드를 분산시킬 수 있다.
+	만약 어떤 java파일에서 다른 java파일의 메소드를 참조하고있는 경우에는
+	메소드를 사용중인 java파일과 선언한 java파일이 다르기 때문에 참조할 수 없는데
+	이런 경우에는 해당 객체를 선언해준 뒤 @Autowired를 추가해준다.
+	어차피 하나의 스프링 컨테이너에서 객체들이 생성되므로
+	주입되는 객체가 생성된 이후에는 @Autowired가
+	알아서 넣어주게 된다.
+
+★자바코드를 통한 설정파일에 의존자동주입은 생성자에는 사용이 불가능하다.
+
+★만약 하나의 설정파일에 전부 넣고 싶다면
+	@Import({Config1.class, Config2.class...})를 사용한다.
+	xml의 <import resource="~~"/>와 같다.
+
+★보통 @Configuration클래스는 많아봐야 10개안팎이므로
+	@Import를 그리 자주는 사용안한다고 함
+
+★applicationContext.xml파일을 자바 Config파일에 포함시키기
+	JavaConfig클래스 선언문위에 @ImportResource("applicationContext.xml") 추가
+
+★반대로 자바 Config파일을 applicatoinContext.xml에 추가시키기
+	<bean class="config파일 풀네임"/>
