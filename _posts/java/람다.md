@@ -1,7 +1,5 @@
 ---
-layout: posts
 title: "[Java] Java 01"
-date:  2019-07-22 09:26:55 +0900
 categories:
     - Java
 ---
