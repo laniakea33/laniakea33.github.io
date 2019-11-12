@@ -1,7 +1,6 @@
 package singleton;
 
 public class SystemSpeaker {
-	private static SystemSpeaker instance;
 	private int volume;
 	
 	private SystemSpeaker() {
@@ -9,11 +8,7 @@ public class SystemSpeaker {
 	}
 	
 	public static SystemSpeaker getInstance() {
-		if (instance == null) {
-			//	시스템 스피커 초기화
-			instance = new SystemSpeaker();
-		}
-		return instance;
+		return LazyHolder.INSTANCE;
 	}
 
 	public int getVolume() {
@@ -22,5 +17,9 @@ public class SystemSpeaker {
 
 	public void setVolume(int volume) {
 		this.volume = volume;
+	}
+
+	private static class LazyHolder {
+		private static final SystemSpeaker INSTANCE = new SystemSpeaker();
 	}
 }
