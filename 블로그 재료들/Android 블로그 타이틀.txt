@@ -1,0 +1,89 @@
+Android 블로그 타이틀
+
+-컴포넌트-
+Service
+IntentService
+BindingService
+BroadcastReceiver
+StickyBroadcastReceiver
+ContentProvider
+ContentResolver
+
+-기본-
+Appcompat
+androidx
+Context
+style costomizing
+attr
+resources
+manifast
+Permission
+build flavor
+Intent
+Intent filter
+broadcast message
+vector drawable
+cache
+SettingsActivity
+Signing APK/AAB, keystore
+
+-시스템서비스-
+AlarmManager
+Notification
+FingerPrinting
+Sensor
+NetworkManager
+
+-뷰-
+Dialog
+Fragment
+WebView
+VideoPlayer
+AudioPlayer
+recycler view
+viewPager/tab
+NavigationView
+CollapsingToolbarLayout
+Costom View
+GridLayout
+
+-라이브러리-
+Glide
+Firebase auth
+Firebase remote database
+Firebase storage
+Firebase crashlytics
+Firebase admob
+Firebase cloud message
+MPAndroidChart
+image cropper
+dagger
+okhttp
+retrofit2
+rxjava
+rxandroid
+rxkotlin
+inappbilling
+google drive api
+databinding
+ACC
+
+-데이터베이스-
+sqlite3
+
+-코틀린-
+kotlin
+kapt
+kotlin extention
+ktx
+koroutine
+
+-기타-
+opensource
+private information
+
+-디자인패턴-
+MVC
+MVP
+MVVM
+MVI?
