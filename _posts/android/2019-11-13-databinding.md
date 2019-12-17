@@ -1,5 +1,5 @@
 ---
-title: "[Android] Data Binding"
+title: "Data Binding"
 categories:
     - Android
 ---

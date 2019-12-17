@@ -1,6 +1,6 @@
-Android ºí·Î±× Å¸ÀÌÆ²
+Android ë¸”ë¡œê·¸ íƒ€ì´í‹€
 
--ÄÄÆ÷³ÍÆ®-
+-ì»´í¬ë„ŒíŠ¸-
 Service
 IntentService
 BindingService
@@ -9,7 +9,7 @@ StickyBroadcastReceiver
 ContentProvider
 ContentResolver
 
--±âº»-
+-ê¸°ë³¸-
 Appcompat
 androidx
 Context
@@ -27,14 +27,14 @@ cache
 SettingsActivity
 Signing APK/AAB, keystore
 
--½Ã½ºÅÛ¼­ºñ½º-
+-ì‹œìŠ¤í…œì„œë¹„ìŠ¤-
 AlarmManager
 Notification
 FingerPrinting
 Sensor
 NetworkManager
 
--ºä-
+-ë·°-
 Dialog
 Fragment
 WebView
@@ -47,7 +47,7 @@ CollapsingToolbarLayout
 Costom View
 GridLayout
 
--¶óÀÌºê·¯¸®-
+-ë¼ì´ë¸ŒëŸ¬ë¦¬-
 Glide
 Firebase auth
 Firebase remote database
@@ -68,21 +68,21 @@ google drive api
 databinding
 ACC
 
--µ¥ÀÌÅÍº£ÀÌ½º-
+-ë°ì´í„°ë² ì´ìŠ¤-
 sqlite3
 
--ÄÚÆ²¸°-
+-ì½”í‹€ë¦°-
 kotlin
 kapt
 kotlin extention
 ktx
 koroutine
 
--±âÅ¸-
+-ê¸°íƒ€-
 opensource
 private information
 
--µğÀÚÀÎÆĞÅÏ-
+-ë””ìì¸íŒ¨í„´-
 MVC
 MVP
 MVVM
