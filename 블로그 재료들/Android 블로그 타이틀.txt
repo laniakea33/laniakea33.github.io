@@ -86,4 +86,4 @@ private information
 MVC
 MVP
 MVVM
-MVI?
+MVI
