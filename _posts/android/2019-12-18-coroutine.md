@@ -100,4 +100,4 @@ class MyActivity : AppCompatActivity(), CoroutineScope {
 }
 {% endhighlight %}
 
-★DIspatchers : 코루틴의 스레드 형태를 어떻게 가질 지 정의. 일반적으로 IO와 Main스레드가 있음.
+★DIspatchers : 코루틴의 스레드 형태를 어떻게 가질 지 정의. 일반적으로 IO와 Main스레드가 있음. 
