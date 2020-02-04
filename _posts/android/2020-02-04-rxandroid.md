@@ -35,4 +35,9 @@ implementation 'com.trello.rxlifecycle3:rxlifecycle-components:3.1.0'
 * RxAndroid 활용 : Handler & Looper나 AsyncTask를 대체 가능.
     TimerTask, Handler.postDelayed등을 Observable.delay() 또는 interval()로 대체 가능.
     Volley, Retrofit에 접목가능. Retrofit은 RxJava를 정식지원함.
+
+* 메모리 누수
+    1. 라이프사이클에 맞게 onPause()나 onDestroy()에서 dispose()로 명시적 자원 해제
+    2. RxLifecycle을 이용해 Observable의 compose()메소드를 이용해 라이프사이클에 바인딩
+    3. CompositeDisposable에 Disposable을 담아뒀다가 한꺼번에 dispose()
     
