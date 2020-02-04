@@ -2,9 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35506dcb-8f08-4594-bcd4-70f844538651" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/markdown-navigator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/laniakea33.github.io.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_posts/android/2020-02-03-rxjava.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_posts/android/2019-12-19-mvp.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_posts/android/2019-12-19-retrofit.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/_posts/android/2019-12-19-rxjava.md" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,63 +23,22 @@
     <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-retrofit.md">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-rxjava.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gemfile">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_config.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-352" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.html">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
+    <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/_posts/swift/2020-02-01-swift-01.md">
+        <entry file="file://$PROJECT_DIR$/_posts/android/2020-02-03-rxjava.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4277">
-              <caret line="1" column="16" lean-forward="true" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            <state relative-caret-position="455">
+              <caret line="77" column="13" lean-forward="true" selection-start-line="77" selection-start-column="13" selection-end-line="77" selection-end-column="13" />
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/_posts/java/2019-07-28-access-modifier.md">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>덕이가</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -87,17 +53,21 @@
         <option value="$PROJECT_DIR$/_posts/android/2019-12-18-coroutine.md" />
         <option value="$PROJECT_DIR$/_posts/android/2019-12-18-mvp.md" />
         <option value="$PROJECT_DIR$/_posts/android/2019-12-19-retrofit.md" />
-        <option value="$PROJECT_DIR$/_posts/android/2019-12-19-rxjava.md" />
         <option value="$PROJECT_DIR$/_posts/swift/2020-02-01-swift-01.md" />
         <option value="$PROJECT_DIR$/_posts/swift/2020-02-01-swift-02.md" />
+        <option value="$PROJECT_DIR$/_posts/ios/2020-02-01-ios-01.md" />
+        <option value="$PROJECT_DIR$/_posts/ios/2020-02-01-ios-02.md" />
+        <option value="$PROJECT_DIR$/_posts/ios/2020-02-01-ios-03.md" />
+        <option value="$PROJECT_DIR$/_posts/android/2019-12-19-rxjava.md" />
+        <option value="$PROJECT_DIR$/_config.yml" />
+        <option value="$PROJECT_DIR$/_posts/android/2020-02-03-rxjava.md" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="260" />
-    <option name="y" value="20" />
-    <option name="width" value="1400" />
-    <option name="height" value="1000" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1792" />
+    <option name="height" value="1020" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -107,7 +77,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -119,6 +88,18 @@
               <item name="laniakea33.github.io" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/Desktop/works/laniakea33.github.io" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="_posts" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="laniakea33.github.io" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/Desktop/works/laniakea33.github.io" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="_posts" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="android" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="laniakea33.github.io" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/Desktop/works/laniakea33.github.io" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="_posts" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="ios" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="laniakea33.github.io" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -136,16 +117,19 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/_posts/ios" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/_posts/ios" />
+      <recent name="$PROJECT_DIR$/_posts" />
       <recent name="$PROJECT_DIR$/_posts/swift" />
       <recent name="C:\Users\user\AndroidStudioProjects\laniakea33.github.io\_posts\android" />
       <recent name="C:\Users\frank\laniakea33.github.io\_posts\android" />
@@ -186,11 +170,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1792" height="1017" extended-state="6" />
+    <frame x="0" y="23" width="1792" height="1020" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.17730096" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.17730096" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -199,7 +183,7 @@
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="0" weight="0.32936078" />
       <window_info anchor="bottom" id="TODO" order="1" weight="0.32936078" />
-      <window_info anchor="bottom" id="Terminal" order="2" weight="0.32864866" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.3275862" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Find" order="4" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
@@ -251,26 +235,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-18-coroutine.md">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-mvp.md">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-retrofit.md">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/_posts/java/2019-07-28-access-modifier.md">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-rxjava.md">
+    <entry file="file://$PROJECT_DIR$/_posts/swift/2020-02-01-swift-02.md" />
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-retrofit.md" />
+    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-19-mvp.md" />
+    <entry file="file://$PROJECT_DIR$/_posts/android/2019-12-18-coroutine.md">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_posts/ios/2020-02-01-ios-03.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+        <state relative-caret-position="314">
+          <caret line="65" selection-start-line="65" selection-end-line="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/_posts/ios/2020-02-01-ios-02.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="569">
+          <caret line="89" column="70" selection-start-line="89" selection-start-column="70" selection-end-line="89" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_posts/ios/2020-02-01-ios-01.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="569">
+          <caret line="192" column="38" selection-start-line="192" selection-start-column="38" selection-end-line="192" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_posts/swift/2020-02-01-swift-01.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Gemfile">
@@ -278,26 +286,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/_config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-352" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_posts/swift/2020-02-01-swift-02.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="493" column="38" lean-forward="true" selection-start-line="493" selection-start-column="38" selection-end-line="493" selection-end-column="38" />
+        <state relative-caret-position="484">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/_posts/swift/2020-02-01-swift-01.md">
+    <entry file="file://$PROJECT_DIR$/_posts/android/2020-02-03-rxjava.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4277">
-          <caret line="1" column="16" lean-forward="true" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+        <state relative-caret-position="455">
+          <caret line="77" column="13" lean-forward="true" selection-start-line="77" selection-start-column="13" selection-end-line="77" selection-end-column="13" />
         </state>
       </provider>
     </entry>

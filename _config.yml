@@ -15,7 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 title: 덕이 블로그
 email: laniakea33@naver.com
-description: 공부용 필기 블로그
+description: 덕이가 공부한 것들
 twitter_username: username
 github_username: username
 minimal_mistakes_skin: contrast
