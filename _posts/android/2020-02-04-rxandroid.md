@@ -15,7 +15,7 @@ categories:
     이는 메모리 누수를 방지하기 위함. complete하지 못한 구독을 자동 dispose함.
 
 * build.gradle의 디펜던시에 추가해 줘야 함
-{% highlight %}
+{% highlight groovy %}
 implementation 'com.trello.rxlifecycle3:rxlifecycle-android:3.1.0'
 implementation 'com.trello.rxlifecycle3:rxlifecycle:3.1.0'
 implementation 'com.trello.rxlifecycle3:rxlifecycle-components:3.1.0'
