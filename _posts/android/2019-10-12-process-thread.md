@@ -1,5 +1,5 @@
 ---
-title: "[Android] Android 시스템에서의 Process와 Thread"
+title: "Android 시스템에서의 Process와 Thread"
 categories:
     - Android
 ---

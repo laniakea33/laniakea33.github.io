@@ -1,5 +1,5 @@
 ---
-title: "[Android] Activity 생명주기"
+title: "Activity 생명주기"
 categories:
     - Android
 ---

@@ -1,5 +1,5 @@
 ---
-title: "[Android] Thread, Looper, Handler"
+title: "Thread, Looper, Handler"
 categories:
     - Android
 ---

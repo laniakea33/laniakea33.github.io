@@ -1,5 +1,5 @@
 ---
-title: "[Android] Activity Task"
+title: "Activity Task"
 categories:
     - Android
 ---

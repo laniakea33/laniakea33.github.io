@@ -1,5 +1,5 @@
 ---
-title: "[Android] 안드로이드의 4대 컴포넌트"
+title: "안드로이드의 4대 컴포넌트"
 categories:
     - Android
 ---

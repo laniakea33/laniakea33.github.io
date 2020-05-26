@@ -1,9 +1,11 @@
 ---
-title: "[Android] AsyncTask"
+title: "AsyncTask"
 categories:
     - Android
 ---
 ★백그라운드 작업을 일일이 워커 스레드로 구현하기 번거롭기 때문에 존재하는 헬퍼 클래스
+
+※ 현재는 @deprecated되었으므로 멀티스레딩을 위해 RxJava나 Coroutine를 배우자.
 
 ★별도의 Handler구현 없이 UI를 갱신 할 수 있다.
 
@@ -32,3 +34,4 @@ categories:
 2-5. onCancelled() : cancel()호출이나 doInBackground()가 종료되었을 때 호출된다.
 
 ★doInBackground()는 반드시 오버라이드 해야 한다.
+
