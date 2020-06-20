@@ -1,0 +1,28 @@
+---
+title: "Variable"
+categories:
+    - Python
+---
+* Python에서 변수를 만들 때는 '='연산자를 사용하며 자료형을 지정하지 않아도 된다. 그렇다고 자료형이 없는 건 아니다.
+
+* id(변수) : 변수의 메모리 주소를 반한다.
+
+* 변수1 is 변수2 : 변수1과 변수2가 같은지 확인한다. 메모리 주소가 같은지 확인하기 때문에 같은 객체인지 확인할 수 있다.
+
+* List의 복사
+    * 방법 1. list2 = list1[:]
+    * 방법 2. copy
+{% highlight python %}
+>>> from copy import copy
+>>> b = copy(a)
+{% endhighlight %}
+
+* 기타 변수 선언 방법
+{% highlight python %}
+>>> a, b = ('python', 'life')
+>>> (a, b) = 'python', 'life'
+//  위 두 문장은 같다
+>>> [a,b] = ['python', 'life']  //  리스트로 변수를 선언
+>>> a = b = 'python'    //  여러변수를 동시에 선언
+>>> a, b = b, a //  두 변수를 스위칭하는 간단한 방법
+{% endhighlight %}

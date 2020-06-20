@@ -1,0 +1,38 @@
+---
+title: "함수"
+categories:
+    - Python
+---
+* 함수 정의, 사용의 예시
+{% highlight python %}
+def add(a, b): 
+    return a + b
+
+>>> add(1,2)
+>>> add(a = 1,b = 2)
+>>> add(b = 1,a = 2)
+
+def add(*args): 
+    ...
+//  매개변수 앞에 *를 붙이면 코틀린의 vararg처럼 n개의 인수를 받도록 한다
+//  함수내부에서 args는 튜플로써 들어온다.
+//  매개변수앞에 **를 붙이면 딕셔너리 자료형으로 함수에 들어온다.
+
+def add(a = 1, b = 2):
+    return a + b
+//  초기값을 설정할 수 있다. 이 때 초기화시킬 파라메터는 뒤 쪽에 둬야 한다.
+
+def add():
+	global a
+	a += 1
+//  함수 밖의 변수에 접근하려면 global키워드를 사용해
+{% endhighlight %}
+
+* lambda : def와 비슷하지만 더 간결하게 표현할 수 있다
+{% highlight python %}
+lambda 매개변수1, 매개변수2, ... : 매개변수를 이용한 표현식
+>>> add = lambda a, b: a+b  //  return키워드 없이도 return한다.
+>>> def add(a, b):
+        return a+b
+//  위 두 표현법은 같다.
+{% endhighlight %}

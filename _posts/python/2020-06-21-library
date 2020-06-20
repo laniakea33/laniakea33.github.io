@@ -1,0 +1,65 @@
+---
+title: "파이썬 라이브러리"
+categories:
+    - Python
+---
+{% highlight python %}
+//  sys
+>>> sys.argv    //  명령행에서 전달된 인수 조회
+>>> sys.exit()  //  스크립트 종료
+>>> sys.path    //  모듈이 저장된 위치 조회
+
+//  pickle : 객체의 형태를 유지하며 파일 입출력
+>>> pickle.dump(객체, 파일) //  파일에 객체 출력
+>>> data = pickle.load(파일)   //  파일 로드해서 객체로 반환
+
+//  os : OS 자원에 접근
+>>> os.environ  //  시스템의 환경변수 조회
+>>> os.chdir(경로)  //  현재 위치를 변경
+>>> os.getcwd() //  현재 위치 반환
+>>> os.system("시스템 명령어")    //  시스템 명령어 호출
+>>> os.popen("시스템 명령어")   //  시스템 명령어를 호출하여 결과를 파일로 저장
+>>> os.mkdir(디렉터리)  //  디렉터리를 생성한다.
+>>> os.rmdir(디렉터리)	//  디렉터리를 삭제한다.단, 디렉터리가 비어있어야 삭제가 가능하다.
+>>> os.unlink(파일) //  파일을 지운다.
+>>> os.rename(src, dst) //  src라는 이름의 파일을 dst라는 이름으로 바꾼다.
+
+//  shutil : 파일을 복사해 주는 파이썬 모듈
+>>> shutil.copy("src.txt", "dst.txt")   //  파일을 복사
+
+//  glob
+>>> glob.glob(디렉토리 경로)    //  해당 경로에 있는 파일을 모두 검색
+
+//  tempfile
+>>> filename = tempfile.mkstemp()   //  이름이 중복되지 않는 임시파일을 만듬
+
+//  time
+>>> time.time() //  현재 시간을 실수로 출력
+>>> time.localtime(time.time()) //  실수를 연월일등등으로 튜플형태로 바꿔 줌
+>>> time.asctime(time.localtime(time.time()))   //  위의 튜플을 스트링 포매팅해줌
+>>> time.ctime()    //  현재 시간을 스트링 포매팅 해줌
+>>> time.strftime('출력할 형식 포맷 코드', time.localtime(time.time())) //  지정된 포맷으로 포매팅해줌
+>>> time.sleep(second)  //  Thread.sleep()과 같다. 단위는 초 단위.
+
+// calendar
+>>> calendar.calendar(2015) //  2015년의 달력을 출력해줌
+>>> calendar.prcal(2015)    //  위와 같음
+>>> calendar.prmonth(2015, 12)  //  연월 지정 달력 출력
+>>> calendar.weekday(2015, 12, 31)  //  이 날이 무슨요일인지 출력(월요일이 0임)
+>>> calendar.monthrange(2015,12)    //  이 달의 1일의 요일과 마지막 날짜를 튜플로 반환
+
+//  random
+>>> random.random() //  0~1사이의 랜덤 실수
+>>> random.randint(1, 10)   //  범위 내의 랜덤 정수
+>>> random.choice(Iterable) //  요소 중 하나를 랜덤으로
+>>> random.shuffle(data)    //  data를 무작위로 섞음
+
+// webbrowser
+>>> webbrowser.open("http://google.com")    //  시스템 기본 브라우저로 URL로드
+>>> webbrowser.open_new("http://google.com")    //  새창으로 URL로드
+
+//  threading
+>>> t = threading.Thread(target=long_task)  //  스레드생성
+>>> t.start()   //  스레드 실행
+
+{% endhighlight %}

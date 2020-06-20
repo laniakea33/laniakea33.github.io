@@ -1,0 +1,25 @@
+---
+title: "파일 읽고 쓰기"
+categories:
+    - Python
+---
+* 파일을 열고 쓰기
+{% highlight python %}
+f = open(파일이름, 'w') //  파일을 생성하고 연다
+//  r : 읽기, w : 새로 쓰기, a : 내용 추가
+f.close()   //  파일을 닫는다.
+f.write(data)   //  파일에 data를 쓴다
+{% endhighlight %}
+
+* 파일 읽기
+{% highlight python %}
+f.readline()    //  첫 번째 줄을 읽는다.
+>>> while True:
+        line = f.readline()
+        if not line: break
+        print(line)
+//  다 읽을 때 까지 계속 읽는다.
+
+f.readlines()    // 모든 줄을 읽어 한 줄씩을 요소로 가지고 있는 리스트를 반환한다.
+f.read()    //  문자열 전체를 str로 읽어온다.
+{% endhighlight %}

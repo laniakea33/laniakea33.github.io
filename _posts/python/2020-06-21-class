@@ -1,0 +1,42 @@
+---
+title: "Class"
+categories:
+    - Python
+---
+* 클래스 선언
+{% highlight python %}
+class Calculator:
+    def __init__(self, first, second):  //  생성자
+        self.first = first
+        self.second = second
+
+    def setdata(self, first, second):   //  함수1
+        self.first = first
+        self.second = second
+
+    def add(self):  //  함수2
+        result = self.first + self.second
+        return result
+
+//  멤버 변수를 선언하지 않아도 된다. self.first = first하는 순간 만들어지는 듯
+{% endhighlight %}
+
+* 첫번째 매개변수 self는 인스턴스 자신인데, 파이썬에서는 이를 파라메터에 명시해 준다.
+함수를 사용할 때는 self를 안넣어도 되는데 아래에 있는 두번째 방법을 사용할 때는 넣어줘야 한다.
+{% highlight python %}
+a.setdata(first, second)    //  메소드 호출 방법1
+Calculator.setdata(a, first, second)    //  메소드 호출 방법2
+{% endhighlight %}
+
+* 상속
+{% highlight python %}
+class MoreCalc(Calculator): //  MoreCalc는 Calculator의 서브클래스
+    def add(self):  //  오버라이딩은 같은 이름의 메소드를 정의하면 된다.
+        ...
+{% endhighlight %}
+
+* 클래스 변수
+{% highlight python %}
+class Family:
+    lastname = "김" //  인스턴스 변수가 아닌 static변수와 같다. 사용법은 자바와 같음
+{% endhighlight %}
