@@ -1,0 +1,51 @@
+---
+title: "List"
+categories:
+    - Python
+---
+* list는 다음과 같이 정의하고 생성할 수 있으며 자료형의 종류에 상관없이 뭐든지 막 섞어서 넣을 수 있다.
+{% highlight python %}
+>>> 리스트명 = [요소, 요소, 요소,...]
+>>> odd = [1,2,3,4,5]
+>>> odd = [1,2,3,4,[5,6]]
+>>> odd = [1,'aasdf',[5,6],"ㅁㄴㅇㄹ",5]
+>>> odd = list()    //  empty list
+{% endhighlight %}
+
+* odd[포지션]으로 접근
+* Index는 다음과 같다
+    * size가 5일 때 : 0, 1, 2, 3, 4
+    * size가 5일 때 : -5, -4, -3, -2, -1
+    * 위 두 줄은 같은 index의 다른 표현이다.
+
+* 슬라이싱
+{% highlight python %}
+>>> odd[startIndex:endIndex]    //  endIndex의 요소는 포함하지 않는다.
+>>> odd[startIndex:]    //  startIndex부터 끝까지
+>>> odd[:endIndex]    //  처음부터 endIndex까지
+>>> odd[0:3]
+>>> odd[0:]
+>>> odd[:3]
+{% endhighlight %}
+
+* list여러개를 +연산자로 연결할 수 있다
+* list에 정수를 *연산자로 곱하면 그 수 만큼 반복한다.
+{% highlight python %}
+>>> [1,2,3] + [4,5,6]
+[1,2,3,4,5,6]
+>>> [1,2,3] * 3
+[1,2,3,1,2,3,1,2,3]
+{% endhighlight %}
+
+* 리스트 관련된 함수
+    * len(list) : 리스트의 길이를 반환
+    * del list[0] : list[0]을 삭제(del함수는 객체를 삭제함)
+    * list.append(5) : list에 5를 추가함
+    * list.sort() : list를 오름차순 정렬
+    * list.reverse() : list를 뒤집음
+    * list.index(3) : 요소3의 index를 반환
+    * list.insert(index, element) : index에 element를 넣음
+    * list.remove(element) : list에서 element를 삭제. 맨 앞의 하나만 삭제한다.
+    * list.pop() : stack의 pop과 같다.
+    * list.count(element) : list안의 element의 갯수를 반환한다.
+    * list.extend(list2) : list + list2와 같다.
