@@ -3,7 +3,7 @@ title: "[JetPack] WorkManager"
 categories:
     - Android
 ---
-* [공식 문서 링크][https://developer.android.com/topic/libraries/architecture/workmanager]
+* [공식 문서 링크](https://developer.android.com/topic/libraries/architecture/workmanager)
 
 * WorkManager : 앱이 종료되거나 기기 재시작시 실행예정인 지연가능한 비동기 작업을 쉽게 예약할 수 있다.
 

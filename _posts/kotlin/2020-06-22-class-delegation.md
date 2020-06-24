@@ -1,7 +1,7 @@
 ---
 title: "Class Delegation(클래스 위임)"
 categories:
-    - Android
+    - Kotlin
 ---
 * 어떠한 클래스를 재정의 하고 싶은 경우 보통 해당 클래스를 상속 받아 재정의 하여 사용하곤 한다.
 하지만 그 클래스가 open class가 아닌 경우는 재정의를 할 수가 없는데, 이 때는 상속을 대신해 델리게이트 패턴사용한다.

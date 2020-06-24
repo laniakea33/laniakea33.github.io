@@ -15,7 +15,6 @@
 # in the templates via {{ site.myvariable }}.
 title: 덕이 블로그
 email: laniakea33@naver.com
-description: 덕이가 공부한 것들
 twitter_username: username
 github_username: username
 minimal_mistakes_skin: contrast
@@ -57,7 +56,7 @@ plugins:
 author:
   name   : "강덕현"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "덕이가 공부한 것들"
+  bio    : "우리 구면인가?"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"

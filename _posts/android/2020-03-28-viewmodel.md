@@ -3,7 +3,7 @@ title: "[JetPack] ViewModel"
 categories:
     - Android
 ---
-* [공식 문서 링크][https://https://developer.android.com/topic/libraries/architecture/viewmodel]
+* [공식 문서 링크](https://https://developer.android.com/topic/libraries/architecture/viewmodel)
 
 * ViewModel : 액티비티, 프레그먼트 등의 UI state를 생명주기에 맞춰 관리한다. 화면 방향 변경 등의 스테이트 체인지에도
     새로 쿼리를 하거나 하지않고 데이터를 유지하도록 할 수 있다. 즉 액티비티, 프레그먼트에서 UI데이터를 분리한 것.
