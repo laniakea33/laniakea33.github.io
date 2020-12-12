@@ -56,7 +56,7 @@ plugins:
 author:
   name   : "강덕현"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "우리 구면인가?"
+#  bio    : "우리 구면인가?"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
