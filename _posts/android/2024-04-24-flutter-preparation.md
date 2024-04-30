@@ -510,6 +510,187 @@ dependencies {
 
 ## ci/cd 설정
 
-CI/CD는 `Github Actions`를 통해서 빌드 후 `Firebase App Distribution`을 통해 배포하도록 할 것이다. 일단 git에 연결해 준다.
+CI/CD는 `Github Actions`를 통해서 빌드 후 `Firebase App Distribution`을 통해 배포하도록 할 것이다. 일단 git에 연결해 준다. iOS는 개발자 계정이 아직 없어서 일단 Android만... 기본적인 빌드와 배포만 진행한다. 먼저 스크립트를 작성하기 위해 
+`프로젝트 루트/.github/workflows`에 `main.yml`파일을 만들어 준다. 이 파일에 yml문법으로 스크립트를 작성하면 된다.
 
-TODO
+### 기본 설정
+~~~
+name: Flutter Github Actions
+
+on: # 트리거 설정
+  push: # release 브랜치에서 푸시했을 때 트리거
+    branches:
+      - release
+
+jobs: # 실행 작업 설정
+  build:
+    # runner 실행 환경
+    runs-on: ubuntu-latest
+
+    steps:
+      # Repository에서 코드 체크 아웃
+      - name: Checkout
+        uses: actions/checkout@v3
+~~~
+
+### Flutter Action 설치
+
+Flutter Action은 Flutter 프로젝트를 Github Actions에서 사용할 수 있게 해주는 패키지이다.
+~~~
+    steps:
+      ...
+
+      # Flutter action 설치
+      - name: Install Flutter action
+        uses: subosito/flutter-action@v2.16.0
+        with:
+            channel: 'stable'
+            flutter-version: '3.19.4'
+~~~
+
+### Flutter 초기화 및 테스트 코드 실행
+~~~
+    steps:
+      ...
+
+      # 디펜던시 패키지 설치
+      - name: Import Flutter Package Dependancy
+        run: flutter pub get
+
+      # 테스트 실행(/test/), TODO 테스트 생성하면 추가할 것. 테스트 없이 명령 실행하면 오류 발생.
+      - name: Test Flutter
+        run: flutter test
+~~~
+
+### keystore파일 생성
+
+Github Actions환경에는 keystore파일이 없기 때문에 keystore.jks파일의 내용을 Repository에 Actions Secret으로 올린 후 workflow에서 불러와 다시 파일로 재구성해야 한다.
+
+일단 내가 업로드 키로 사용하고 있는 키를 `openssl base64 -in ./keystore.jks` 커맨드로 base64 인코딩한다. Github 프로젝트의 Settings -> Secrets and Variables -> Actions로 진입 해 인코딩 된 내용을 새 Secret으로 만든다. 이후 workflow에서 해당 내용을 아래처럼 `timheuer/base64-to-file`패키지를 이용해 디코딩 후 파일로 생성한다.
+~~~
+    steps:
+      ...
+
+      # 현 작업 위치 : /home/runner/work/프로젝트명/프로젝트명(프로젝트 루트 폴더)
+      # 안드로이드 Keystore파일 생성 : /home/runner/work/프로젝트명/keystore/keystore.jks
+      - name: Create Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: keystore.jks
+          fileDir: '../keystore'
+          # base64 디코딩한다.
+          encodedString: ${{ secrets.KEYSTORE }}
+~~~
+
+### keystore.properties파일 생성, app build.gradle 설정
+
+android의 앱 수준 build.gradle파일을 열어 빌드 할 때 keystore관련 값이 `keystore.properties` 파일을 따르도록 설정한다. 이후 이 파일을 또 workflow에서 만들면 된다. keystore.properties에 storePassword, keyAlias, keyPassword 값을 지정할 것이기 때문에 이 값들을 또 Actions Secret으로 등록한다. 이 것들은 base64인코딩 안해도 된다.
+
+**app build.gradle**
+~~~
+android {
+  ...
+
+  signingConfigs {
+        release {
+            try {
+                def keystorePropertiesFile = rootProject.file("keystore.properties")
+                def keystoreProperties = new Properties()
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+                storeFile file(keystoreProperties['storeFilePath'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+}
+~~~
+
+**main.yml**
+~~~
+    steps:
+      ...
+
+      # 안드로이드 keystore.properties파일 생성 : /home/runner/work/프로젝트명/프로젝트명/android/keystore.properties
+      - name: Create keystore.properties
+        run: |
+            echo "storeFilePath=/home/runner/work/프로젝트명/keystore/keystore.jks" > android/keystore.properties
+            echo "storePassword=${{ secrets.STOREPASSWORD }}" >> android/keystore.properties
+            echo "keyPassword=${{ secrets.KEYPASSWORD }}" >> android/keystore.properties
+            echo "keyAlias=${{ secrets.KEYALIAS }}" >> android/keystore.properties
+~~~
+
+### firebase_options.dart 파일 생성
+
+firebase_options.dart파일의 내용을 업로드하지 않기 위해 git ignore처리 해 뒀다. 그래서 이 파일도 만들어 줘야 한다. 해당 내용을 keystore 파일과 같은 방법으로 base64인코딩 Actions Secret으로 업로드, 이후 workflow에서 다시 디코딩하여 파일로 만든다.
+~~~
+    steps:
+      ...
+
+      # 안드로이드 lib/firebase/prod/firebase_options.dart파일 생성 : /home/runner/work/프로젝트명/프로젝트명/lib/firebase/prod/firebase_options.dart
+      - name: Create Firebase Options
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: firebase_options.dart
+          fileDir: 'lib/firebase/prod'
+          encodedString: ${{ secrets.FIREBASEOPTIONS }}
+~~~
+
+### aab or apk빌드
+
+prod flavor로 빌드한다. main파일의 역할을 main_prod.dart파일이 한다고 명시해 줘야 한다.
+~~~
+    steps:
+      ...
+
+      # 안드로이드 aab 빌드 : build/app/outputs/bundle/prodRelease/app-prod-release.aab
+      - name: Build Android aab
+#        run: flutter build appbundle --flavor prod -t lib/main_prod.dart
+        run: flutter build apk --flavor prod -t lib/main_prod.dart
+~~~
+
+
+### Firebase App Distribution으로 업로드
+
+`wzieba/Firebase-Distribution-Github-Action` 패키지를 사용한다. Actions Secret으로 파이어베이스 App ID와 CREDENTIAL_FILE_CONTENT를 업로드 해야 하는데, [이 페이지](https://steveos.medium.com/github-action-and-firebase-app-distribution-ci-cd-ways-part-2-fcf9ba425c0)를 참고할 것. Firebase App Dist에 aab를 배포하려면 구글 플레이 콘솔의 앱과 Firebase 프로젝트를 연결해야 한다. 그러려면 플레이 콘솔에서 앱이 1회이상 심사를 통과한 상태로 내부, 알파, 베타, 프로덕션 트랙에 배포돼야 한다. apk파일은 그렇게 하지 않아도 배포 업로드 가능하다.
+~~~
+    steps:
+      ...
+
+      # aab파일 Firebase App Distribution으로 업로드
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+          groups: 'tester'
+#          file: ./build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          file: ./build/app/outputs/apk/prod/release/app-prod-release.apk
+~~~
+
+### Slack으로 결과 발송
+이건 어떻게 하는지 까먹어서 설명 생략.
+~~~
+      # 결과 Slack으로 노티
+      - name: action-slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: www-be
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          if_mention: failure,cancelled
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+~~~
