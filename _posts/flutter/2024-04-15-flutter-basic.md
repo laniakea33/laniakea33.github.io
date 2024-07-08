@@ -111,7 +111,7 @@ StatefulWidget의 Lifecycle만 기술한다.
 
 2. initState() : createState()이후에 1번 호출된다. stream 구독 등의 자원등록을 여기서 하면 좋다. 여기서 아직 BuildContext는 사용할 수 없다.
 
-3. didChangeDependencies() : Widget이 최초 생성될 때 1번 호출되고, 이후 이 Widget이 참조하는 다른 Widget(주로 InheritedWidget)이 rebuild 될 때 호출된다. 이게 호출되면 이후 반드시 build()가 호출된다. InheritedWidget이 업데이트 될 때 딱 한번 network처리 등이 필요 할 때 override하면 좋다.
+3. didChangeDependencies() : Widget이 최초 생성될 때 1번 호출되고, 이후 이 Widget이 참조하는 다른 Widget(주로 InheritedWidget)이 rebuild 될 때 호출된다. 이게 호출되면 이후 반드시 build()가 호출된다. InheritedWidget이 업데이트 될 때 딱 한번 network처리 등이 필요 할 때 override하면 좋다. 
 
 4. build() : Widget의 tree를 형성한다. state가 업데이트 될때, didChangeDependencies()나 didUpdateWidget()호출 이후 이어서 호출된다.
 

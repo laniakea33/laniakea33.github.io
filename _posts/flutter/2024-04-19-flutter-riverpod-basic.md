@@ -267,7 +267,7 @@ Widget build(BuildContext context, WidgetRef ref) {
 }
 ~~~
 
-일반적으로 `autoDispose` modifier와 함께 사용된다. Future Provider는 watch하면 AsyncValue를 반환하는데, 이는 data, loading, error의 패턴을 사용할 수 있도록 Riverpod에서 제공하는 유틸리티 클래스이다.
+실제 weather API의 호출은 build함수 실행시에 이루어진다. 일반적으로 `autoDispose` modifier와 함께 사용된다. Future Provider는 watch하면 AsyncValue를 반환하는데, 이는 data, loading, error의 패턴을 사용할 수 있도록 Riverpod에서 제공하는 유틸리티 클래스이다.
 
 API 통신 등의 비동기 작업, loading과 error처리가 필요한 작업, 여러 비동기 작업을 하나로 묶을 때, 새로고침 작업 등에 사용할 수 있다.
 

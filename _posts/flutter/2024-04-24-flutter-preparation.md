@@ -412,7 +412,7 @@ flutterfire configure -p [dev용 프로젝트 이름] -i [iOS앱 번들 id] -a [
 ~~~
 **example** :
 ~~~
-flutterfire configure -p myapp-dev-3n4b2 -i com.myapp.myapp.dev -a com.myapp.myapp.dev -o lib/firebase/prod/firebase_options.dart --no-apply-gradle-plugins
+flutterfire configure -p myapp-dev-3n4b2 -i com.myapp.myapp.dev -a com.myapp.myapp.dev -o lib/firebase/dev/firebase_options.dart --no-apply-gradle-plugins
 ~~~
 
 6. prod용 프로젝트에 앱 연결
@@ -450,6 +450,51 @@ void main() async {
 ~~~
 
 **main_prod.dart**파일도 마찬가지로 수정한다.
+
+### 하나의 flavor에 여러개의 파이어베이스 프로젝트 설정하기
+
+도토리 관리자 앱은 flavor구분 없이 한번에 두 dev, prod 프로젝트에 모두 접근해야 한다. 따라서 아래와 같이 구성한다.
+
+**firebase_options_dev.dart** 파일 생성
+
+`flutterfire configure -p myapp-dev-3n4b2 -i com.myapp.myapp -a com.myapp.myapp -o lib/firebase/firebase_options_dev.dart --no-apply-gradle-plugins`
+
+**firebase_options_prod.dart** 파일 생성
+
+`flutterfire configure -p myapp-3n4b2 -i com.myapp.myapp -a com.myapp.myapp -o lib/firebase/firebase_options_prod.dart --no-apply-gradle-plugins`
+
+firebase_option파일이 두개 생성됐다. 초기화도 마찬가지로 두번 해 준다.
+
+**main.dart**
+~~~
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //  prod용 파이어베이스 프로젝트 초기화
+  await Firebase.initializeApp(
+    options: prod.DefaultFirebaseOptions.currentPlatform,
+  );
+
+  //  dev용 파이어베이스 프로젝트 초기화
+  await Firebase.initializeApp(
+    name: firebaseAppNameDev,
+    options: dev.DefaultFirebaseOptions.currentPlatform,
+  );
+
+  ...
+}
+~~~
+
+처음에는 두 프로젝트 모두 name을 지정했는데, 에러가 발생했다. 디폴트가 없어졌다고 패키지에서 판단하는 것 같다. 이제 아래처럼 사용하면 된다.
+
+~~~
+//  dev용 앱 객체 생성
+final firebaseAppForDev = Firebase.app(firebaseAppNameDev);
+
+final firestore = FirebaseFirestore.instance;
+final firestoreForDev = FirebaseFirestore.instanceFor(app: firebaseAppForDev);
+~~~
+
 
 ### iOS앱에 파이어베이스 설정
 
@@ -507,6 +552,49 @@ dependencies {
 ~~~
 
 이제 파이어베이스 사용 설정이 완료됐다.
+
+## Env 설정
+
+우리 도토리 프로젝트는 네이버 지도 API를 사용한다. 앱 내에서 Client ID를 사용하기 위해, 그리고 암호화와 VCS에 등록하지 않기위해 env패키지를 사용해 환경변수화 시키기로 한다. `envied`패키지를 사용하기 위해 앱의 **pubspec.yaml**에 아래를 추가한다.
+
+**pubspec.yaml**
+~~~
+...
+
+dependencies:
+  ...
+  envied: ^0.5.4+1
+
+dev_dependencies:
+  ...
+  envied_generator: ^0.5.4+1
+
+...
+~~~
+
+프로젝트 루트 디렉토리에 아래 내용의 `.env`파일을 생성한다.
+
+**.env**
+![alt text](../../assets/images/image.png)
+
+lib 디렉토리에 아래 파일을 생성한다.
+
+**env.dart**
+~~~
+import 'package:envied/envied.dart';
+
+part 'env.g.dart';
+
+@Envied(path: '.env')
+abstract class Env {
+  @EnviedField(varName: 'NAVER_MAP_CLIENT_ID', obfuscate: true)
+  static final String naverMapClientId = _Env.naverMapClientId;
+}
+~~~
+
+`flutter pub run build_runner build --delete-conflicting-outputs` 커맨드를 실행해 `env.g.dart`파일이 생성되도록 한다.
+
+이 파일에는 `.env`파일에 기재된 값이 암호화되어(obfuscate: true 옵션) 저장돼 있다. 이제 `.env`파일을 git ignore에 추가하면 Client ID 값을 외부에 노출하지 않을 수 있게 된다.
 
 ## ci/cd 설정
 
@@ -590,9 +678,9 @@ android의 앱 수준 build.gradle파일을 열어 빌드 할 때 keystore관련
 **app build.gradle**
 ~~~
 android {
-  ...
+    ...
 
-  signingConfigs {
+    signingConfigs {
         release {
             try {
                 def keystorePropertiesFile = rootProject.file("keystore.properties")
