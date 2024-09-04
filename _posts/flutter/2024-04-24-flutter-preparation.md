@@ -767,6 +767,47 @@ prod flavor로 빌드한다. main파일의 역할을 main_prod.dart파일이 한
           file: ./build/app/outputs/apk/prod/release/app-prod-release.apk
 ~~~
 
+### 구글 스토어에 업로드
+
+[이 블로그](https://medium.com/lodgify-technology-blog/deploy-your-flutter-app-to-google-play-with-github-actions-f13a11c4492e)를 참고했다.
+
+~~~
+    steps:
+      ...
+
+      # 안드로이드 google-play-service-account-key.json파일 생성 : /home/runner/work/Dotori/Dotori/google-play-service-account-key.json
+      - name: Create GOOGLE_PLAY_SERVICE_ACCOUNT_KEY file
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: google-play-service-account-key.json
+          fileDir: '.'
+          # base64 디코딩한다.
+          encodedString: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+
+      # Upload generated aab to project artifacts
+      - name: Upload generated aab to the artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: aab-stores
+          path: build/app/outputs/bundle/prodRelease/app-prod-release.aab
+
+      # Deploy bundle to Google Play internal testing
+      - name: Deploy to Play Store (Internal testing)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: google-play-service-account-key.json
+          packageName: com.beforejuly7th.dotori
+          releaseFiles: build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          track: internal
+~~~
+
+이 과정에서 **google-play-service-account-key.json**파일을 만들게 된다. 해당 앱을 플레이 콘솔에 업로드 할 수 있게 허가받은 서비스 계정의 키라고 보면 되는데, 이를 만들려면 다음 과정을 따라야 한다.
+
+1. Google Cloud Platform에서 프로젝트 생성 후 [IAM 및 계정] > [서비스 계정] 진입, 서비스 계정을 하나 생성.
+2. 해당 서비스 계정의 상세페이지 > 키 탭에서 키를 생성한다. 이 때 JSON으로 생성하여 파일을 내려받는다.
+3. 구글 플레이 콘솔로 진입하여 [사용자 및 권한] 탭으로 진입, 신규 사용자 초대를 눌러 1번 단계에서 만든 서비스 계정의 주소를 입력한다. 또한 아래 권한 섹션에서 앱과 권한을 선택해 주는데, 앱은 업로드 자동화 대상이고, 권한은 앱을 **테스트 트랙으로 출시**를 골라주면 된다.
+4. github actions의 secret으로 2번에서 생성받은 output파일을 base64인코딩하여 등록해 준다. 위 예제에서 사용하려면 **GOOGLE_PLAY_SERVICE_ACCOUNT_KEY**를 제목으로 해야 한다.
+
 ### Slack으로 결과 발송
 이건 어떻게 하는지 까먹어서 설명 생략.
 ~~~
