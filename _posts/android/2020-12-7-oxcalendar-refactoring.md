@@ -9,7 +9,7 @@ categories:
 새로 출시 되는 기술들이 어떤 흐름속에서 태어난 것인지 알게 됨으로써 안드로이드 생태계의 패러다임과 유행, 앞으로의 방향성을 짐작할 수 있게 되리라 생각한다.
 이러한 패러다임을 손으로 느껴보기 위한 공부차원에서 토이프로젝트이자 스파게티 덩어리인 OX캘린더의 소스를 리팩토링해 보고자 한다.
 
-현재의 코드는 대충 아래와 같다.
+현재의 코드는 요약하자면 아래와 같다.
 
 Jetpack Room을 활용해 내부 DB인 SQLite를 사용한 앱이기 때문에 dao객체를 앱 시작시 하나 만들어 App클래스의 companion object로 가지고있어
 전역적으로 사용할 수 있도록 했다.
@@ -62,12 +62,8 @@ class CalendarFragment() : Fragment(), DateViewAdapter.OnDateClickListener {
 }
 {% endhighlight %}
 
-Fragment가 View이자 Controller의 역할을 하고 있고, 스테이트의 관리가 데이터 유지를 위해 Fragment의
-전역변수(records)로써 되고있는데 사실 스테이트라고 하기도 쫌 그렇다.
-
-UI에 세팅하기 위해 가공이 필요한 데이터도 state라고 하나..?
-
-아무튼 이렇게 Fragment의 여러곳에서 이 records를 참조하고, 변경하고, 요리조리 들쑤시다보니 언제 어디서 어떻게 변경되었는지 추적하기가
+Fragment가 View이자 Controller의 역할을 하고 있고, state의 관리가 Fragment의
+전역변수(records)로서 되고있다. Fragment의 여러곳에서 이 records를 참조하고, 변경하고, 요리조리 들쑤시다보니 언제 어디서 어떻게 변경되었는지 추적하기가
 점점 어려워졌고 뷰 로직과 뒤엉켜 오작동 하는경우가 허다했으며 코드는 점점 길어져만 갔다.
 그래서 이걸 정리하는 김에 구글에서 제시하는 아키텍처 표준모델을 따라 MVVM 리팩토링을 해보기로 했다. 
 
@@ -79,10 +75,10 @@ UI에 세팅하기 위해 가공이 필요한 데이터도 state라고 하나..?
 
 핵심원칙은 아래와 같다.
 1. Repository : 데이터 IO
-2. ViewModel : Repository로부터 Output된 Data를 가공하여 state업데이트, 유저 액션을 수신하여 Repository로 전달
+2. ViewModel : Repository로부터 불러온 Data를 가공하여 state업데이트, 유저 액션을 수신하여 Repository로 전달
 3. View : ViewModel로부터 state업데이트를 구독하여 뷰 갱신 및 유저 액션을 ViewModel로 전달.
 4. Repository -> ViewModel -> View의 단방향 참조(View는 ViewModel을 안다. ViewModel은 Repository를 알고 View는 모른다. Repository는 아무것도 모르고 해달라는 거만 해준다.)
-5. RxJava를 이용해 이벤트를 전달. 
+5. RxJava를 이용해 이벤트를 전달.
 6. DataBinding을 사용해 View와 데이터를 바인딩함.
 7. ViewModel은 스테이트 관리를 위한 데이터 스트림을 LiveData로써 가짐.
 8. 각 계층의 의존성은 Hilt를 사용해 주입함.
@@ -140,6 +136,8 @@ class RepositoryImpl(val dao: RoomDao) : Repository {
     ...
 }
 {% endhighlight %}
+
+observeOn()은 Repository보다는 ViewModel측에서 정하는 것이 나을 것 같다.
 
 - BaseViewModel : 기본적인 공통 기능을 가진 ViewModel객체를 정의함. AAC의 ViewModel을 상속하는데 앱에서 화면 회전 등을
 지원할 생각이 없기 때문에 사실 그럴 필요는 없는 듯. 암튼 핵심적인 기능은 CompositeDisposable을 가지고, dispose하는 것.
