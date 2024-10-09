@@ -41,13 +41,6 @@ model.getUsers().observe(this, Observer<List<User>>{ users ->
 * 액티비티가 재생성되면 동일한 viewmodel인스턴스를 받게 된다.
 
 * 액티비티가 완전히 종료되면 프레임워크가 ViewModel의 onCleared() 호출한다. 오버라이드하여 리소스를 정리하는데 사용할 수 있다.
-
-* ViewModel 개체는 뷰 또는 LifecycleOwners의 특정 인스턴스화보다 오래 지속되도록 설계되었습니다.
-    이러한 설계로 인해 뷰 및 Lifecycle 개체에 관해 알지 못할 때도 ViewModel을 다루는 테스트를 더 쉽게 작성할 수 있습니다.
-    ViewModel 개체에는 LiveData 개체와 같은 LifecycleObservers가 포함될 수 있습니다. 
-    그러나 ViewModel 개체는 LiveData 개체와 같이 수명 주기를 인식하는 Observable의 변경사항을 관찰해서는 안 됩니다. 
-    예를 들어 ViewModel은 시스템 서비스를 찾는 데 Application 컨텍스트가 필요하면 AndroidViewModel 클래스를 확장하고, 
-    생성자에 Application을 받는 생성자를 포함할 수 있습니다(Application 클래스가 Context를 확장하므로). 이게 도대체 뭔소리...?
     
 * ViewModel의 스코프는 ViewModelProvider에 전달된 Lifecycle로 인해 결정된다.
     액티비티의 경우 onDestroy()까지, 프레그먼트는 분리될때 까지 남는다.
