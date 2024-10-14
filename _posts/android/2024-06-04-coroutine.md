@@ -93,6 +93,22 @@ launch {...} 의 리턴 타입이다. 이 객체를 통해 해당 코루틴 빌�
 
 실행중인 launch를 종료시킨다. 기본적으로 cancel이 호출된 시점 후, 즉 job이 `cancelling`상태가 된 후 첫 suspend함수(delay()등) 호출에서 CancellationException가 발생하여 종료되는 것이다. suspend 함수가 없다면 `yield()`나 `ensureActive()`를 호출하여 중단점을 설정하거나 launch{} 내부에서 `isActive`값을 통해 명시적으로 종료처리 할 수 있다.
 
+`try catch`를 runCatching으로 대체 가능하다.
+
+~~~kotlin
+runCatching {
+    launch {
+        throw RuntimeException("테스트 에러 발생")
+    }
+}
+    .onSuccess {
+        println("성공")
+    }
+    .onFailure { e ->
+        println("내부에서 에러 잡음 : $e")
+    }
+~~~
+
 `try catch finally`로 전통적인 에러 및 후처리가 가능하다. 자원할당 해제와 같은 코드를 finally에서 사용할 때 같이쓰면 좋을 것 같다.
 
 `cancelling`상태에서 새로운 coroutine scope를 시작하거나 suspend 함수를 실행할 수 없다. `isActive`를 조회하여 상태 체크 후 suspend 함수를 호출해야 하며 `cancelling` 상태에서 반드시 suspend 함수 호출이 필요한 경우, 예를 들어 `try catch finally` 구문의 finally 블록에서 DB롤백과 같은 작업이 필요한경우는 withContext(NonCancellable){}를 사용해야 한다.
@@ -100,6 +116,8 @@ launch {...} 의 리턴 타입이다. 이 객체를 통해 해당 코루틴 빌�
 `cancel()`과 `join()`을 연속적으로 호출하면 취소처리가 끝날 때 까지 job이 스레드를 점유하므로 코드 블록 실행을 방어할 수 있다. 둘을 합친 `cancelAndJoin()`도 있음.
 
 Job도 Coroutine Scope처럼 계층구조를 형성한다. 부모 Job이 캔슬되면 자식 Job도 함께 캔슬되며, 마찬가지로 예외도 Child에서 Parent로 전파되어 Job을 최초 생성한 곳까지 전파된다. 전파하고 싶지 않은 경우 `Superviser job`을 사용해야 한다.
+
+Job(), SupervisorJob() 등 직접 생성한 Job은 parent job을 명시적으로 지정해 주지 않는 이상 항상 root job이며, 항상 Active하다. 그래서 complete()를 명시적으로 호출 하지 않으면 상위 Coroutine이 종료되지 않는다.
 
 #### Job의 라이프사이클
 
@@ -142,7 +160,7 @@ runBlocking {
 
 Job의 확장이며 결과값을 갖는다. 다른 언어의 Future/Promise의 Kotlin 구현체. `async{}`호출 또는 `CompletableDeferred()`의 호출로 생성할 수 있다.
 
-Job과 달리 Deferred는 예외를 자동으로 전파되지 않으며 예외 상황에서 await()를 호출하면 그제서야 예외가 전파된다. join()을 통해 시작시키면 자동으로 전파 안되게 할 수 있으나, 이후 결과에 접근하면 예외를 반환한다. try-catch문으로 await()호출부를 감싸거나, CEH를 사용하거나 getCancellationException()을 이용해 안전하게 예외를 가져올 수 있다.
+launch로 시작된 scope와 달리 async scope는 예외가 자동으로 전파되지 않으며 예외 상황에서 await()를 호출하면 그제서야 전파된다. try-catch문으로 await()호출부를 감싸거나, CEH를 사용하거나 getCancellationException()을 이용해 안전하게 예외를 가져올 수 있다.
 
 #### Repository 구현시의 async {...} vs suspend 함수
 
@@ -234,7 +252,81 @@ suspend fun doOneTwoThree() = coroutineScope {
 
 ### SupervisorJob
 
-Coroutine Context의 구성요소. 스코프 내의 에러 전파를 계층 구조의 아래쪽으로만 전파하도록 한다. 그래서 하위 코루틴에서 에러처리를 해야 한다. 참고로 SupervisorScope는 CoroutineScope(SupervisorJob())과 같다.
+Coroutine Context의 구성요소. 스코프 내의 에러 전파 범위를 SupervisorJob의 Scope 내부로 제한한다. 그래서 하위 코루틴에서 에러처리를 해야 한다.
+
+~~~kotlin
+launch {
+    val sj = SupervisorJob()
+    val scope = CoroutineScope(coroutineContext + sj)
+
+    println("코루틴 시작")
+
+    scope.launch {
+        println("launch 1")
+        launch {
+            println("launch 1-1")
+            delay(500)
+            throw RuntimeException("테스트 에러")
+            println("launch 1-1 종료")
+        }
+        println("launch 1 종료")
+    }
+
+    scope.launch {
+        println("launch 2")
+        delay(300)
+        println("launch 2 종료")
+    }
+
+    scope.launch {
+        println("launch 3")
+        delay(700)
+        println("launch 3 종료")
+    }
+
+    delay(1000)
+
+    sj.complete()
+    println("코루틴 종료")
+}
+~~~
+
+참고로 SupervisorScope {...}를 사용할 수도 있는데, 이 Scope Builder는 자식 코루틴을 모두 SupervisorJob으로 만든다.
+
+~~~kotlin
+supervisorScope {
+    println("코루틴 시작")
+
+    launch {
+        println("launch 1")
+        launch {
+            println("launch 1-1")
+            delay(500)
+            throw RuntimeException("테스트 에러")
+            println("launch 1-1 종료")
+        }
+        println("launch 1 종료")
+    }
+
+    launch {
+        println("launch 2")
+        delay(300)
+        println("launch 2 종료")
+    }
+
+    launch {
+        println("launch 3")
+        delay(700)
+        println("launch 3 종료")
+    }
+
+    delay(1000)
+
+    println("코루틴 종료")
+}
+~~~
+
+위 SupervisorJob 코드와 아래 superviserScope{} 코드는 똑같다. 각 launch를 SupervisorJob이 설정된 Scope에서 여는 것과 supervisorJob을 complete해 주는 코드가 사라졌다.
 
 ### Dispatcher
 
@@ -277,7 +369,7 @@ job.join()
 
 ## GlobalScope
 
-소속 스코프가 없이 전역적으로 사용 가능한 코루틴 스코프이다. 어떤 계층에도 속하지 않고, Application의 생명주기를 따르기 때문에 Activity 등 개별 Context에 맞춰 캔슬해야 하는 안드로이드 환경에서는 보통 GlobalScope대신 CoroutineScope(CoroutineContext)를 쓴다.
+현재 스코프와는 별개로 새로운 전역적인 Scope를 만드는데 사용한다. 어떤 계층에도 속하지 않고, Application의 생명주기를 따르기 때문에 Activity 등 개별 Context에 맞춰 캔슬해야 하는 안드로이드 환경에서는 보통 GlobalScope대신 CoroutineScope(CoroutineContext)를 쓴다.
 
 # Flow
 
@@ -419,7 +511,7 @@ for ((i, value) in indexed) {
 Channel(10) : 버퍼사이즈 10 설정(ArrayChannel), 디폴트 0(=Channel.RENDEZVOUS)
 - Channel.RENDEZVOUS : 즉시 일시정지(RendezvousChannel)
 - UNLIMITED : 무제한(LinkedListChannel)
-- CONFLATED : 오래된 값이 지워짐, 즉 송신자는 일시중단 되지 않고 계속해서 값을 갱신하게 된다.(ConflatedChannel)
+- CONFLATED : 버퍼사이즈가 1. 오래된 값이 지워짐. 즉 송신자는 일시중단 되지 않고 계속해서 값을 갱신하게 된다.(ConflatedChannel)
 - BUFFERED : 버퍼사이즈가 64
 
 ### 오버플로우 정책
