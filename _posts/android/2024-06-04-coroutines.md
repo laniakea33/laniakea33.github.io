@@ -541,7 +541,7 @@ receive전용 채널
 
 ★ produce {...} : 채널을 직접 구현하지 않고 producer-consumer 패턴을 통해 간접적으로 각 코루틴에서 send와 receive하게 해 주는 확장함수. ProducerCoroutine을 만들어 데이터를 제공한다.
 
-★ ProducerCoroutine은 ProducerScope를 상속받고, ProducerScope는 CoroutineScope와 SendChannel(send만 할 수 있는 채널)을 상속받는다.
+★ ProducerCoroutine은 ProducerScope를 상속받고, ProducerScope는 CoroutineScope와 ReceiveChannel(send만 할 수 있는 채널)을 상속받는다.
 
 ★ consumeEach {...} : 채널에서 반복적으로 데이터를 받는다.
 
@@ -571,12 +571,12 @@ fun coroutineTest() {
 }
 ~~~
 
-### Fan-in, Fan-out
-
-#### Fan-in
-채널 소비자 코루틴수 > 생산자 코루틴수, 채널을 동시에 구독한다. 생산자의 send를 통해 생산된 데이터를 소비자들이 돌아가면서 하나씩 받는다.
+### Fan-out, Fan-in
 
 #### Fan-out
+채널 소비자 코루틴수 > 생산자 코루틴수, 채널을 동시에 구독한다. 생산자의 send를 통해 생산된 데이터를 소비자들이 돌아가면서 하나씩 받는다.
+
+#### Fan-in
 채널 소비자 코루틴수 < 생산자 코루틴수. 소비자 코루틴은 각 생산자 코루틴에게 공정하게 생산의 기회를 준다.
 
 ### select {...}
