@@ -1,5 +1,5 @@
 ---
-title: "Coroutine"
+title: "Coroutines"
 categories:
     - Android
 ---
@@ -571,12 +571,12 @@ fun coroutineTest() {
 }
 ~~~
 
-### Pan-in, Pan-out
+### Fan-in, Fan-out
 
-#### Pan-in
+#### Fan-in
 채널 소비자 코루틴수 > 생산자 코루틴수, 채널을 동시에 구독한다. 생산자의 send를 통해 생산된 데이터를 소비자들이 돌아가면서 하나씩 받는다.
 
-#### Pan-out
+#### Fan-out
 채널 소비자 코루틴수 < 생산자 코루틴수. 소비자 코루틴은 각 생산자 코루틴에게 공정하게 생산의 기회를 준다.
 
 ### select {...}
