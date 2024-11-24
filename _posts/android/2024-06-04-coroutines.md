@@ -460,22 +460,26 @@ fun onEach() {
 ## 일시중단 Iterator, Sequence
 
 ### Iterator
-Kotlin에서 지원하는 코루틴을 활용해 값을 하나씩 생성하여 반환하는 컬렉션. Iterator.next()를 호출하여 값을 반환할 때 까지 suspend된다. 또한 hasNext()를 호출하면 Iterator는 다음 값을 생성하며 true를 반환하거나, 다음 값이 없으면 false를 반환한다.
+Kotlin에서 지원하는 코루틴을 활용해 값을 하나씩 생성하여 반환하는 컬렉션. Iterator.next()를 호출하여 값을 반환 받는데, 다음 번 next()가 호출될 때 까지 iterator 블럭은 suspend된다. 또한 hasNext()를 호출하면 Iterator는 다음 값을 생성하며 true를 반환하거나, 다음 값이 없으면 false를 반환한다. 리스트의 for문과는 다르게 요청 타이밍을 다양하게 결정할 수 있고, 요청할 때에만 값을 계산하고 생산하므로 메모리, 성능 측면에서 효율적이다. 따라서 구성하는데 계산이 복잡하고 오래걸리며 그 끝이 불명확한(이론상 무한대까지 가능한) Collection은 iterator를 사용하는 것이 낫다. index가 없으므로 이미 발행된 순서의 값에 돌아갈 수 없다.
 
 ~~~kotlin
 val iterator = iterator {
-        yield("안녕")
-        yield("안녕2")
-        yield("안녕3")
+    var i = 0
+    while(true) {
+        println("Generating $i")
+        yield(i++) // 데이터를 하나씩 반환
     }
+}
 
-println("${iterator.next()}")
-println("${iterator.next()}")
-println("${iterator.next()}")
+while (iterator.hasNext()) {
+    println("Delay")
+    delay(1000L)
+    println("Next element: ${iterator.next()}")
+}
 ~~~
 
 ### Sequence
-Iterator와 다르게 index가 있어서 특정 위치의 데이터를 가져올 수 있다. 한번에 여러개 가져오는 것도 가능하다. 또한 상태를 저장하지 않고, 실행된 후에는 초기화 되는데, 조회할 때 마다 처음부터 다시 yield()한다는 말임. Iterator와 마찬가지로 일단 한번 값을 한번 생성하면 다음값을 요청받을 때 까지 suspend 된다.
+Iterator와 다르게 index가 있어서 특정 위치의 데이터를 가져올 수 있다. 한번에 여러개 가져오는 것도 가능하다. 또한 상태를 저장하지 않고, 실행된 후에는 초기화 되는데, 조회할 때 마다 처음부터 다시 yield()한다는 말임. Iterator와 마찬가지로 일단 한번 값을 한번 생성하면 다음값을 요청받을 때 까지 suspend 된다. Iterator와 마찬가지로 그 끝이 불분명한 Collection을 형성할 때 사용하는데, 값 계산을 시작하기 전에 미리 그 최종적인 형태를 결정할 때 사용한다. 즉 `take(50)`을 통해 50개만 요청하기로 결정했다면 딱 50개까지만 연산을 하므로 미리 무한대 크기의 배열을 만들어 둘 필요가 없다는 의미이다.
 
 ~~~ kotlin
 val f = sequence<Int> { //  sequence로 구현한 피보나치 수열
@@ -496,6 +500,8 @@ for ((i, value) in indexed) {
     println("$i : $value")
 }
 ~~~
+
+Iterator, Sequence 둘 다 block에 SequenceScope를 리시버로 하는 람다가 들어간다. SequenceScope는 내부적으로 @RestrictsSuspension이 설정되어 있으므로 이 scope를 리시버로 사용하는 block 내에서는 오직 SequenceScope에 명시된 suspend 함수만 실행할 수 있다. 즉 값 생성도중 delay()를 호출하는 등 사용자 마음대로 suspend 시킬 수가 없는데 이는 값을 생성하는 동안 suspend 할 수 없도록 하여 next()로 값을 요청할 때 마찬가지로 suspend될 필요가 없게 만든다. 구성과 사용법을 단순하게 유지하기 위함인 듯 하다. 생성 도중 suspend 시킬수 있으려면 아래에 있는 producer를 사용해야 한다.
 
 ## Channel
 
@@ -537,7 +543,7 @@ receive전용 채널
 - receive() : 데이터 받기. 이미 채널이 닫힌 경우. ClosedReceiveChannelException 발생.
 
 ### Producer
-일시중단 Iterator와 Sequence는 값 생성도중 일시중단 할 수 없다는 단점이 있다. 이 것을 가능케 하는 게 Producer. 특정 CoroutineContext에서 값을 생성한다. 값 생성이 언제든 일시중단 될 수 있으므로 값 수신도 일시중단 연산에서 해야 한다. 내부적으로 Channel을 사용함.
+일시중단 Iterator와 Sequence는 값 생성도중 일시중단 할 수 없다는 단점이 있다. 이 것을 가능케 하는 게 Producer. 특정 CoroutineContext에서 값을 생성한다. 값 생성이 언제든 일시중단 될 수 있으므로 값 수신도 일시중단 연산에서 해야 한다. 값을 요청하면 생산될 때 까지 suspend, 값을 생산하면 다음 요청이 있을 때 까지 suspend 된다. 내부적으로 Channel을 사용함. index 개념이 없고, 지나간 순서의 값을 다시 얻을 수 없다는 점에서 Iterator와 가깝다는 생각이 든다.
 
 ★ produce {...} : 채널을 직접 구현하지 않고 producer-consumer 패턴을 통해 간접적으로 각 코루틴에서 send와 receive하게 해 주는 확장함수. ProducerCoroutine을 만들어 데이터를 제공한다.
 
