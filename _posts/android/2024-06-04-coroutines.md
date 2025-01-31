@@ -252,7 +252,7 @@ suspend fun doOneTwoThree() = coroutineScope {
 
 ### SupervisorJob
 
-Coroutine Context의 구성요소. 스코프 내의 에러 전파 범위를 SupervisorJob의 Scope 내부로 제한한다. 그래서 하위 코루틴에서 에러처리를 해야 한다.
+특수한 형태의 Job. 에러 전파 범위를 SupervisorJob의 자식으로 제한한다. 즉 하나의 자식 Job에서 발생한 예외로 인해 다른 자식 Job이 취소되지 않게 예외 전파 범위를 한정해 준다.
 
 ~~~kotlin
 launch {
@@ -291,7 +291,7 @@ launch {
 }
 ~~~
 
-참고로 SupervisorScope {...}를 사용할 수도 있는데, 이 Scope Builder는 자식 코루틴을 모두 SupervisorJob으로 만든다.
+이러한 SupervisorJob이 설정된 CoroutineScope는 supervisorScope {…} 를 통해 간단하게 만들 수 있다. 위 코드와 아래 코드는 똑같이 동작한다. 각 launch를 SupervisorJob이 설정된 Scope에서 여는 것과 supervisorJob을 complete해 주는 코드가 사라졌다.
 
 ~~~kotlin
 supervisorScope {
@@ -325,8 +325,6 @@ supervisorScope {
     println("코루틴 종료")
 }
 ~~~
-
-위 SupervisorJob 코드와 아래 superviserScope{} 코드는 똑같다. 각 launch를 SupervisorJob이 설정된 Scope에서 여는 것과 supervisorJob을 complete해 주는 코드가 사라졌다.
 
 ### Dispatcher
 
@@ -404,7 +402,55 @@ listOf(1,2,3,4,5).asFlow().collect()
 - var result = Flow.fold('초기값', '계산식')
 - var result = Flow.count('조건식')
 
-Flow의 데이터 발행은 기본적으로 코루틴 스코프 내에서 실행되며, flow scope 내에서 함부로 Dispatcher를 사용해 스레드를 전환할 수 없다. RxJava의 subscribeOn과 같이 `flowOn(Dispatcher)`을 통해, 해당 플로우의 실행 스레드를 미리 지정해야 한다.
+Flow의 데이터 발행은 기본적으로 코루틴 스코프 내에서 실행되며, flow scope 내에서 함부로 Dispatcher를 사용해 스레드를 전환할 수 없다. RxJava의 subscribeOn과 같이 `flowOn(Dispatcher)`을 통해, 해당 플로우의 실행 스레드를 미리 지정해야 한다. flowOn은 호출 되기 이전의 스트림에 적용되며, 그 적용 범위는 바로 직전 flowOn의 호출 바로 다음 라인부터이다. 예를들면 아래 코드와 같다.
+
+```kotlin
+@OptIn(ExperimentalStdlibApi::class)
+fun dispatchers() {
+    val scope = CoroutineScope(mainDispatcher)
+
+    flow { emit(1) }    //  Dispatchers.IO 적용
+        //  Dispatchers.IO 적용
+        .onEach { println("$it : ${coroutineContext[CoroutineDispatcher]?.javaClass?.name}, ${Thread.currentThread().name}") }  
+        .flowOn(Dispatchers.IO)
+        //  mainDispatcher 위에 아무것도 적용시킬 라인이 없으므로 의미없는 호출임
+        .flowOn(mainDispatcher)
+        //  Dispatchers.IO 적용
+        .map { it + 1 }
+        //  Dispatchers.IO 적용
+        .onEach { println("$it : ${coroutineContext[CoroutineDispatcher]?.javaClass?.name}, ${Thread.currentThread().name}") }
+        .flowOn(Dispatchers.IO)
+        //  launchIn덕분에 mainDispatcher 적용
+        .map { it + 1 }
+        //  launchIn덕분에 mainDispatcher 적용
+        .onEach { println("$it : ${coroutineContext[CoroutineDispatcher]?.javaClass?.name}, ${Thread.currentThread().name}") }
+        .launchIn(scope)
+}
+```
+
+또 재밌는거
+
+```kotlin
+fun main() = runBlocking<Unit> {
+    flow { emit(create("flow{}")) }
+        .flowOn(Dispatchers.IO)
+        .launchIn(this)
+
+    flowOf(create("flowOf"))
+        .flowOn(Dispatchers.IO)
+        .launchIn(this)
+}
+
+suspend fun create(method: String): String {
+    println("$method, ${Thread.currentThread().name}")
+    return "test"
+}
+```
+Output
+flow{}, DefaultDispatcher-worker-1 @coroutine#4
+flowOf, main @coroutine#1
+
+위 두개의 flow가 만들어내는 로그가 다르다. Dispatcher가 서로 다르게 지정된 것. 둘다 Dispatchers.IO가 적용되어야 할 것 같은데 왜 아래쪽 flowOf()는 main으로 나타나는가? flowOf는 `flow { emit(value)) }`를 호출한다. 그래서 결국 실행되는 코드는 똑같다. 그럼에도 적용 Dispatcher가 다른 이유는 바로 create()가 실행되는 순서에 있다. 첫번째 예시는 flow를 통해 Dispatchers.IO가 적용된 스코프가 열린 후 해당 스코프 안에서 create()가 호출됐다면, 두번째 예시는 create()가 먼저 호출되어 값을 반환한 후 해당 값으로 flow의 스코프가 열린다. 아주 쉽고 간단히 답을 맞출 수 있지만, 단순히 flowOn이 호출되면 Dispatcher가 모든 라인에 적용된다고 생각하면 실수를 할 수 있다.
 
 ## 플로우 버퍼링
 
@@ -416,13 +462,14 @@ Flow 발행자와 결과 수신자가 처리속도가 다른 경우, 특히 수�
 
 ## 플로우 결합하기
 
+- merge : 단순 플로우 병합.
 - zip : 여러 플로우를 결합하는데, 여러 플로우가 모두 같이 발행돼야 수신자에게 이벤트가 들어온다.
 - combine : RxJava의 combineLatest와 같다.
 
 ## 플로우 플래트닝
 
-- flatMapConcat : 데이터 발행 순서에 맞춰서 동기적으로 플래트닝한다.
 - flatMapMerge : 발행되는 족족 비동기적으로 플래트닝한다.
+- flatMapConcat : 데이터 발행 순서에 맞춰서 동기적으로 플래트닝한다.
 - flatMapLatest : 다음 데이터가 발행되면 기존에 진행중이던 플래트닝은 캔슬한다.
 
 ## Flow 에러처리 : catch()
